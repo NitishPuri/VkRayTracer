@@ -13,7 +13,7 @@ namespace Utils {
 	}
 }
 
-void Renderer::Render(const Camera& cam)
+void Renderer::Render(const Scene& scene, const Camera& cam)
 {
 	Ray ray;
 	ray.Origin = cam.GetPosition();
@@ -22,7 +22,7 @@ void Renderer::Render(const Camera& cam)
 		for (uint32_t x = 0; x < m_FinalImage->GetWidth(); x++) {
 
 			ray.Direction = cam.GetRayDirections()[x + y * m_FinalImage->GetWidth()];			
-			auto color = TraceRay(ray);
+			auto color = TraceRay(scene, ray);
 			color = glm::clamp(color, glm::vec4(0.0f), glm::vec4(1.0f));
 
 			auto i = x + y * m_FinalImage->GetWidth();
@@ -33,13 +33,18 @@ void Renderer::Render(const Camera& cam)
 	m_FinalImage->SetData(m_ImageData);
 }
 
-glm::vec4 Renderer::TraceRay(const Ray& ray)
+glm::vec4 Renderer::TraceRay(const Scene& scene, const Ray& ray)
 {
-	float radius = 0.5f;
+	if (scene.Spheres.size() == 0)
+		return glm::vec4(0, 0, 0, 1);
+
+	const Sphere& sphere = scene.Spheres[0];
+
+	glm::vec3 origin = ray.Origin - sphere.Position;
 
 	float a = glm::dot(ray.Direction, ray.Direction);
-	float b = 2.0f * glm::dot(ray.Origin, ray.Direction);
-	float c = glm::dot(ray.Origin, ray.Origin) - radius * radius;
+	float b = 2.0f * glm::dot(origin, ray.Direction);
+	float c = glm::dot(origin, origin) - sphere.Radius * sphere.Radius;
 
 	float discrminant = (b * b) - (4.0f * a * c);
 
@@ -48,13 +53,13 @@ glm::vec4 Renderer::TraceRay(const Ray& ray)
 	}
 
 	float t = (-b - glm::sqrt(discrminant)) / (2.0f * a);
-	glm::vec3 hitPoint = ray.Origin + ray.Direction * t;
+	glm::vec3 hitPoint = origin + ray.Direction * t;
 	glm::vec3 normal = glm::normalize(hitPoint);
 
 	glm::vec3 lightDir = glm::normalize(glm::vec3(-1, -1, -1));
 	float lightIntensity = glm::max(glm::dot(normal, -lightDir), 0.0f);
 
-	glm::vec3 sphereColor(1, 0, 1);
+	glm::vec3 sphereColor = sphere.Albedo;
 	sphereColor *= lightIntensity;
 
 	return glm::vec4(sphereColor, 1);
