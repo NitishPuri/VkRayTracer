@@ -1,4 +1,6 @@
-# Walnut App Template
+# Vulkan Ray Tracer
+
+Implementing a ray tracer based on Ray Tracing In a Weekend series using Vulkan and Imgui based app framework Walnut..
 
 This is a simple app template for [Walnut](https://github.com/TheCherno/Walnut) - unlike the example within the Walnut repository, this keeps Walnut as an external submodule and is much more sensible for actually building applications. See the [Walnut](https://github.com/TheCherno/Walnut) repository for more details.
 
