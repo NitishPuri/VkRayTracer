@@ -7,6 +7,8 @@
 
 #include "Renderer.h"
 
+#include "glm/gtc/type_ptr.hpp"
+
 class ExampleLayer : public Walnut::Layer
 {
 public:
@@ -29,6 +31,13 @@ public:
 		if (ImGui::Button("Render")) {
 			Render();
 		}
+		ImGui::End();
+
+
+		ImGui::Begin("Scene");
+		ImGui::DragFloat3("Position", glm::value_ptr(m_Scene.Spheres[0].Position), 0.1f);
+		ImGui::DragFloat("Radius", &m_Scene.Spheres[0].Radius, 0.1f);
+		ImGui::ColorEdit3("Color", glm::value_ptr(m_Scene.Spheres[0].Albedo));
 		ImGui::End();
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
