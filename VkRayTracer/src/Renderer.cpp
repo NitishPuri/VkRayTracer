@@ -17,8 +17,11 @@ void Renderer::Render()
 
 uint32_t Renderer::PerPixel(glm::vec2 coord)
 {
-	return Walnut::Random::UInt();
-	//return 0xffff00ff;
+	uint32_t r = (uint32_t)(coord.x * 255.0f);
+	uint32_t g = (uint32_t)(coord.y * 255.0f);
+
+	//return Walnut::Random::UInt();
+	return 0xff000000 | (g << 8) | (r);
 }
 
 void Renderer::OnResize(uint32_t width, uint32_t height)
