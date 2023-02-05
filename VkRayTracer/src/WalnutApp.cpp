@@ -12,6 +12,11 @@ class ExampleLayer : public Walnut::Layer
 public:
 	ExampleLayer()
 		: m_Camera(45.0f, 0.1f, 100.0f) {}
+
+	virtual void OnUpdate(float ts) override {
+		m_Camera.OnUpdate(ts);
+	}
+
 	virtual void OnUIRender() override
 	{
 		ImGui::Begin("Settings");
