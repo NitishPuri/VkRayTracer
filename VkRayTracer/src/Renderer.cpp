@@ -3,13 +3,22 @@
 
 void Renderer::Render()
 {
-	for (uint32_t i = 0; i < m_FinalImage->GetWidth() * m_FinalImage->GetHeight(); i++) {
-		//m_FinalImageData[i] = 0xffff00ff;
-		m_ImageData[i] = Walnut::Random::UInt();
-		//m_FinalImageData[i] |= 0xff000000;
+	for (uint32_t y = 0; y < m_FinalImage->GetHeight() ; y++) {
+		for (uint32_t x = 0; x < m_FinalImage->GetWidth(); x++) {
+
+			glm::vec2 coord{ (x / (float)m_FinalImage->GetWidth()), (y / (float)m_FinalImage->GetHeight()) };
+			auto i = x + y * m_FinalImage->GetWidth();
+			m_ImageData[i] = PerPixel(coord);
+		}
 	}
 
 	m_FinalImage->SetData(m_ImageData);
+}
+
+uint32_t Renderer::PerPixel(glm::vec2 coord)
+{
+	return Walnut::Random::UInt();
+	//return 0xffff00ff;
 }
 
 void Renderer::OnResize(uint32_t width, uint32_t height)
